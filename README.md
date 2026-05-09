@@ -44,3 +44,11 @@ An `ImageColorMatch` node takes the color palette of your Mood Reference Image a
 2. Provide your base 3D image.
 3. Provide three specific reference images (Main Material, Mood/Lighting, Secondary Material).
 4. Queue Prompt.
+
+### Troubleshooting Custom Nodes
+If ComfyUI tells you that a node is missing (e.g., `ImageColorMatch`), the easiest way to resolve it is to use the **ComfyUI Manager**:
+1. Open ComfyUI.
+2. Click **Manager** in the main menu (if you don't have it, install `ComfyUI-Manager` via git clone into your `custom_nodes` folder).
+3. Click **Install Missing Custom Nodes**.
+4. It will search its database for the node (e.g., `ImageColorMatch` is part of the `ComfyUI_essentials` or `ComfyUI-Image-Filters` package) and install it for you.
+5. Restart ComfyUI.
