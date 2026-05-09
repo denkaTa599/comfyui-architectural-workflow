@@ -253,6 +253,10 @@
             "image": [
                 "19",
                 0
+            ],
+            "vae": [
+                "3",
+                0
             ]
         },
         "class_type": "ControlNetApplyAdvanced",
@@ -302,6 +306,10 @@
             ],
             "image": [
                 "22",
+                0
+            ],
+            "vae": [
+                "3",
                 0
             ]
         },
