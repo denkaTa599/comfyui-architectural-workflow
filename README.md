@@ -92,3 +92,12 @@ Yes! The IP-Adapters are highly recommended for dictating specific materials and
 1. In ComfyUI, right-click on the **IPAdapterAdvanced** nodes.
 2. Select **Bypass**. The nodes will turn gray/purple and a red line will strike through them.
 3. ComfyUI will now ignore them during generation. You do not need to delete the nodes or change the wiring.
+
+### Solving "insightface model is required for FaceID models" Error
+If you get an error mentioning FaceID when trying to run the IP-Adapter, it means ComfyUI is using the wrong IP-Adapter package for Flux.
+
+The popular `ComfyUI_IPAdapter_plus` package does not fully support Flux natively yet and misinterprets the nodes.
+
+1.  **Delete** the old IP-Adapter nodes if they are red.
+2.  Install the correct package: **[ComfyUI-IPAdapter-Flux](https://github.com/Shakker-Labs/ComfyUI-IPAdapter-Flux)** (by Shakker-Labs) via the ComfyUI Manager.
+3.  I have updated the workflow file to use the specific nodes from this package (`Load IPAdapter Flux Model` and `Apply IPAdapter Flux Model`). You no longer need a separate CLIPVision loader node for the IP-Adapter, as it handles the vision model automatically.

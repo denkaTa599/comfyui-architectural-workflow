@@ -154,35 +154,22 @@
     },
     "14": {
         "inputs": {
-            "ipadapter_file": "ip-adapter-flux-dev.safetensors"
+            "ipadapter": "ip-adapter-flux-dev.safetensors",
+            "clip_vision": "google/siglip-so400m-patch14-384",
+            "provider": "cuda"
         },
-        "class_type": "IPAdapterModelLoader",
+        "class_type": "IPAdapterFluxLoader",
         "_meta": {
             "title": "IP-Adapter Model"
         }
     },
-    "15": {
-        "inputs": {
-            "clip_name": "siglip_vision_patch14_384.safetensors"
-        },
-        "class_type": "CLIPVisionLoader",
-        "_meta": {
-            "title": "SigLIP Vision Encoder"
-        }
-    },
     "16": {
         "inputs": {
-            "weight": 0.4,
-            "weight_type": "linear",
-            "combine_embeds": "concat",
-            "start_at": 0.0,
-            "end_at": 0.6,
-            "embeds_scaling": "V only",
             "model": [
                 "6",
                 0
             ],
-            "ipadapter": [
+            "ipadapter_flux": [
                 "14",
                 0
             ],
@@ -190,29 +177,22 @@
                 "11",
                 0
             ],
-            "clip_vision": [
-                "15",
-                0
-            ]
+            "weight": 0.4,
+            "start_percent": 0.0,
+            "end_percent": 0.6
         },
-        "class_type": "IPAdapterAdvanced",
+        "class_type": "ApplyIPAdapterFlux",
         "_meta": {
             "title": "IP-Adapter 1: Concrete Material"
         }
     },
     "17": {
         "inputs": {
-            "weight": 0.55,
-            "weight_type": "linear",
-            "combine_embeds": "concat",
-            "start_at": 0.1,
-            "end_at": 0.85,
-            "embeds_scaling": "V only",
             "model": [
                 "16",
                 0
             ],
-            "ipadapter": [
+            "ipadapter_flux": [
                 "14",
                 0
             ],
@@ -220,12 +200,11 @@
                 "12",
                 0
             ],
-            "clip_vision": [
-                "15",
-                0
-            ]
+            "weight": 0.55,
+            "start_percent": 0.1,
+            "end_percent": 0.85
         },
-        "class_type": "IPAdapterAdvanced",
+        "class_type": "ApplyIPAdapterFlux",
         "_meta": {
             "title": "IP-Adapter 2: Lighting/Mood"
         }
