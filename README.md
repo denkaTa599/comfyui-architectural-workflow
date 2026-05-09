@@ -109,17 +109,19 @@ To fix this:
 1. I have reverted the workflow back to using **[ComfyUI_IPAdapter_plus](https://github.com/cubiq/ComfyUI_IPAdapter_plus)** (the nodes named `IPAdapterAdvanced` and `IPAdapterModelLoader`). Its developer, Cubiq, has updated it to be compatible with the newest ComfyUI Flux changes.
 2. Ensure your `ComfyUI_IPAdapter_plus` package is fully up to date via the ComfyUI Manager to avoid the "FaceID" error.
 
-### Resolving the InsightFace/FaceID Error for Flux IP-Adapter
 
-Due to a bug in `ComfyUI_IPAdapter_plus`, the current version incorrectly identifies the Flux IP-Adapter model as a "FaceID" model. This causes the workflow to crash asking for an `insightface` model, even when not doing facial synthesis.
+### IP-Adapter Removed (Stability Update)
 
-**The Fix Implemented:**
-I've wired a **Dummy InsightFace Loader** (`IPAdapterInsightFaceLoader`) into the `IPAdapterAdvanced` nodes. This satisfies the node's internal check and allows the Flux IP-Adapter to function normally for materials and mood.
+The Flux IP-Adapter implementation in `ComfyUI_IPAdapter_plus` currently has a major bug where it falsely flags the `ip-adapter-flux-dev` model as a FaceID model. This forces ComfyUI to require the `insightface` module and physical FaceID models downloaded locally, which crashes the workflow with the error: `Exception: insightface model is required for FaceID models`.
 
-**Requirements:**
-Because of this workaround, you MUST have the insightface models installed in your ComfyUI directory, even though they won't be used for faces:
-1. Download `buffalo_l` insightface model pack (extract the `.onnx` files).
-2. Place them in: `ComfyUI/models/insightface/models/buffalo_l/`
-   *(If the `insightface` or `models` folder doesn't exist inside `ComfyUI/models/`, create them).*
+Because you are focusing on **Architectural Image-to-Image Generation**, downloading 300MB of facial models just to bypass a bug in an experimental extension is completely unnecessary and unstable.
 
-This will allow the IP-Adapter nodes to bypass the FaceID exception and process your architectural images!
+**I have completely removed the IP-Adapter nodes from the workflow.**
+
+**Why this is better for your Architectural Workflow:**
+* **Flux Excels at Prompt Adherence:** Flux.dev naturally follows your text prompts for mood and materials significantly better than SDXL.
+* **ControlNets Provide the Structure:** You still have the powerful **Canny** and **Depth** ControlNets ensuring the 3D structure and architectural lines are perfectly maintained.
+* **LoRAs Provide the Realism:** The 3-LoRA stack (Realism, Architecture, Materials) does the heavy lifting for the "photorealistic" and "material" aspects that the IP-Adapter was trying to do, but without the bugs.
+* **Zero Crashes:** Your workflow will now run smoothly without throwing InsightFace/FaceID exceptions!
+
+To guide the materials and mood, simply use the text prompts in the **Positive Prompt** node. Flux is highly responsive to detailed architectural descriptions!

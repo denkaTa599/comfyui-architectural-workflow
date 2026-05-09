@@ -161,74 +161,6 @@
             "title": "IP-Adapter Model"
         }
     },
-    "16": {
-        "inputs": {
-            "model": [
-                "6",
-                0
-            ],
-            "ipadapter": [
-                "14",
-                0
-            ],
-            "image": [
-                "11",
-                0
-            ],
-            "weight": 0.4,
-            "weight_type": "linear",
-            "combine_embeds": "concat",
-            "start_at": 0.0,
-            "end_at": 0.6,
-            "embeds_scaling": "V only",
-            "clip_vision": [
-                "99",
-                0
-            ],
-            "insightface": [
-                "999",
-                0
-            ]
-        },
-        "class_type": "IPAdapterAdvanced",
-        "_meta": {
-            "title": "IP-Adapter 1: Concrete Material"
-        }
-    },
-    "17": {
-        "inputs": {
-            "model": [
-                "16",
-                0
-            ],
-            "ipadapter": [
-                "14",
-                0
-            ],
-            "image": [
-                "12",
-                0
-            ],
-            "weight": 0.55,
-            "weight_type": "linear",
-            "combine_embeds": "concat",
-            "start_at": 0.1,
-            "end_at": 0.85,
-            "embeds_scaling": "V only",
-            "clip_vision": [
-                "99",
-                0
-            ],
-            "insightface": [
-                "999",
-                0
-            ]
-        },
-        "class_type": "IPAdapterAdvanced",
-        "_meta": {
-            "title": "IP-Adapter 2: Lighting/Mood"
-        }
-    },
     "19": {
         "inputs": {
             "low_threshold": 100,
@@ -364,7 +296,7 @@
             "scheduler": "simple",
             "denoise": 0.7,
             "model": [
-                "17",
+                "6",
                 0
             ],
             "positive": [
@@ -427,7 +359,7 @@
             "scheduler": "simple",
             "denoise": 0.35,
             "model": [
-                "17",
+                "6",
                 0
             ],
             "positive": [
@@ -498,7 +430,7 @@
                 0
             ],
             "model": [
-                "17",
+                "6",
                 0
             ],
             "positive": [
@@ -552,43 +484,6 @@
         "class_type": "SaveImage",
         "_meta": {
             "title": "Save Final Masterpiece"
-        }
-    },
-    "99": {
-        "inputs": {
-            "clip_name": "siglip_vision_patch14_384.safetensors"
-        },
-        "class_type": "CLIPVisionLoader",
-        "_meta": {
-            "title": "Load CLIP Vision (SigLIP)"
-        }
-    },
-    "113": {
-        "inputs": {
-            "ipadapter_file": "ip-adapter-flux-dev.safetensors"
-        },
-        "class_type": "IPAdapterModelLoader",
-        "_meta": {
-            "title": "IPAdapter Loader (Mood)"
-        }
-    },
-    "118": {
-        "inputs": {
-            "ipadapter_file": "ip-adapter-flux-dev.safetensors"
-        },
-        "class_type": "IPAdapterModelLoader",
-        "_meta": {
-            "title": "IPAdapter Loader (Material)"
-        }
-    },
-    "999": {
-        "class_type": "IPAdapterInsightFaceLoader",
-        "inputs": {
-            "provider": "CPU",
-            "model_name": "buffalo_l"
-        },
-        "_meta": {
-            "title": "Dummy InsightFace (Bypass Error)"
         }
     }
 }
