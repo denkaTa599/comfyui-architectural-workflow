@@ -568,7 +568,7 @@
             "method": "mkl",
             "color_space": "rgb"
         },
-        "class_type": "ImageColorMatch",
+        "class_type": "ImageColorMatch+",
         "_meta": {
             "title": "Match Color Grade to Mood"
         }
