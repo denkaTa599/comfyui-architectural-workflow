@@ -101,3 +101,10 @@ The popular `ComfyUI_IPAdapter_plus` package does not fully support Flux nativel
 1.  **Delete** the old IP-Adapter nodes if they are red.
 2.  Install the correct package: **[ComfyUI-IPAdapter-Flux](https://github.com/Shakker-Labs/ComfyUI-IPAdapter-Flux)** (by Shakker-Labs) via the ComfyUI Manager.
 3.  I have updated the workflow file to use the specific nodes from this package (`Load IPAdapter Flux Model` and `Apply IPAdapter Flux Model`). You no longer need a separate CLIPVision loader node for the IP-Adapter, as it handles the vision model automatically.
+
+### Solving "TypeError: forward_orig_ipa() got an unexpected keyword argument 'timestep_zero_index'"
+This crash occurs because you are using a very recent version of ComfyUI (v0.13.0+) where the core Flux code was updated, breaking older custom IP-Adapter nodes (like `ComfyUI-IPAdapter-Flux`).
+
+To fix this:
+1. I have reverted the workflow back to using **[ComfyUI_IPAdapter_plus](https://github.com/cubiq/ComfyUI_IPAdapter_plus)** (the nodes named `IPAdapterAdvanced` and `IPAdapterModelLoader`). Its developer, Cubiq, has updated it to be compatible with the newest ComfyUI Flux changes.
+2. Ensure your `ComfyUI_IPAdapter_plus` package is fully up to date via the ComfyUI Manager to avoid the "FaceID" error.

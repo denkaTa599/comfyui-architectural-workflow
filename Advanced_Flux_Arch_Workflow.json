@@ -154,11 +154,9 @@
     },
     "14": {
         "inputs": {
-            "ipadapter": "ip-adapter-flux-dev.safetensors",
-            "clip_vision": "google/siglip-so400m-patch14-384",
-            "provider": "cuda"
+            "ipadapter_file": "ip-adapter-flux-dev.safetensors"
         },
-        "class_type": "IPAdapterFluxLoader",
+        "class_type": "IPAdapterModelLoader",
         "_meta": {
             "title": "IP-Adapter Model"
         }
@@ -169,7 +167,7 @@
                 "6",
                 0
             ],
-            "ipadapter_flux": [
+            "ipadapter": [
                 "14",
                 0
             ],
@@ -178,10 +176,17 @@
                 0
             ],
             "weight": 0.4,
-            "start_percent": 0.0,
-            "end_percent": 0.6
+            "weight_type": "linear",
+            "combine_embeds": "concat",
+            "start_at": 0.0,
+            "end_at": 0.6,
+            "embeds_scaling": "V only",
+            "clip_vision": [
+                "99",
+                0
+            ]
         },
-        "class_type": "ApplyIPAdapterFlux",
+        "class_type": "IPAdapterAdvanced",
         "_meta": {
             "title": "IP-Adapter 1: Concrete Material"
         }
@@ -192,7 +197,7 @@
                 "16",
                 0
             ],
-            "ipadapter_flux": [
+            "ipadapter": [
                 "14",
                 0
             ],
@@ -201,10 +206,17 @@
                 0
             ],
             "weight": 0.55,
-            "start_percent": 0.1,
-            "end_percent": 0.85
+            "weight_type": "linear",
+            "combine_embeds": "concat",
+            "start_at": 0.1,
+            "end_at": 0.85,
+            "embeds_scaling": "V only",
+            "clip_vision": [
+                "99",
+                0
+            ]
         },
-        "class_type": "ApplyIPAdapterFlux",
+        "class_type": "IPAdapterAdvanced",
         "_meta": {
             "title": "IP-Adapter 2: Lighting/Mood"
         }
@@ -532,6 +544,15 @@
         "class_type": "SaveImage",
         "_meta": {
             "title": "Save Final Masterpiece"
+        }
+    },
+    "99": {
+        "inputs": {
+            "clip_name": "siglip_vision_patch14_384.safetensors"
+        },
+        "class_type": "CLIPVisionLoader",
+        "_meta": {
+            "title": "Load CLIP Vision (SigLIP)"
         }
     }
 }
