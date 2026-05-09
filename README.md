@@ -1,51 +1,46 @@
 # Advanced Arch-Viz Flux Workflow for ComfyUI
 
-This repository contains `Advanced_Flux_Arch_Workflow.json`, a highly optimized ComfyUI workflow tailored specifically for architectural visualization.
+This repository contains `Advanced_Flux_Arch_Workflow.json`, a highly creative and optimized ComfyUI workflow tailored specifically for architectural visualization.
 
 ## Goal
-The purpose of this workflow is to transform a basic, low-resolution 3D viewport render into a high-quality, photorealistic architectural image. It preserves the geometry of the original 3D render while applying realistic materials, lighting, and environmental context guided by a reference mood board.
+The purpose of this workflow is to transform a basic, low-resolution 3D viewport render into a high-quality, photorealistic architectural masterpiece. It uses advanced multi-conditioning techniques to dictate materials, mood, and precise geometry.
 
 ## System Requirements
-This workflow has been specifically designed and optimized for a system with:
+Optimized for:
 - **GPU:** NVIDIA RTX 5080 (or equivalent with 16GB VRAM)
 - **RAM:** 64GB DDR5
 - **CPU:** AMD Ryzen 7 7700 8-core or similar.
 
-By utilizing FP8 weights for the Flux UNET and implementing Ultimate SD Upscale with tiling, we keep VRAM usage safely within the 16GB limit while producing massive, highly-detailed outputs.
+## Advanced Workflow Architecture
 
-## Workflow Architecture & Node Choices
+### 1. The Multi-LoRA Stack
+To achieve true photorealism, relying on a single LoRA isn't enough. We use a **3-LoRA stack**:
+1.  **ArchViz Base (`strength: 0.65`):** Dictates the structural, architectural photography aesthetic (V-Ray styling).
+2.  **Cinematic Lighting (`strength: 0.45`):** Modifies the global illumination to create dramatic, volumetric light (e.g., golden hour or moody overcast).
+3.  **Hyper Materials (`strength: 0.50`):** Adds micro-details to surfaces, ensuring concrete looks porous and glass looks appropriately reflective.
 
-### 1. Base Model & Precision
-*   **Flux.dev UNET (FP8):** We load the `flux1-dev-fp8.safetensors` model. Using FP8 quantization is crucial for fitting Flux into 16GB VRAM while retaining immense detail.
-*   **Dual CLIP (T5 FP8):** We use `t5xxl_fp8_e4m3fn.safetensors` and `clip_l.safetensors`. The T5 text encoder is massive, so loading it in FP8 format alongside the UNET ensures we don't hit out-of-memory (OOM) errors.
+### 2. The Multi-IP-Adapter Pipeline
+Materials are everything in architecture. We use **three chained IP-Adapters**, each with a specific purpose:
+1.  **Primary Material (Concrete/Wood):** A reference image specifically for the main building texture. Applied early in the generation (`start: 0.0, end: 0.60`).
+2.  **Mood/Lighting Reference:** An image depicting the desired atmosphere. Applied heavily throughout the generation (`start: 0.1, end: 0.85`).
+3.  **Secondary Material (Glass/Metal):** A reference for facade reflections. Applied later to dictate surface finish (`start: 0.3, end: 0.90`).
 
-### 2. Style & Realism Enhancement
-*   **Architecture Realism LoRA:** A specialized architectural LoRA (e.g., `flux_archviz.safetensors`) is injected with a strength of 0.85. This biases the model heavily towards professional architectural photography (V-Ray style, global illumination, ray tracing).
-*   **IP-Adapter with SigLIP Vision:** `ip-adapter-flux-dev.safetensors` paired with `siglip_vision_patch14_384.safetensors`. We use a *Mood Reference Image* as input here. This forces the model to borrow materials (concrete, glass, wood) and lighting (e.g., sunset, golden hour) from the reference image, ensuring the generated materials look physically accurate.
+### 3. Dual ControlNet Geometry Preservation
+A single ControlNet cannot understand both rigid lines and volumetric space perfectly. We use a **Dual ControlNet setup**:
+1.  **Canny Edge ControlNet (`strength: 0.75`):** Extracts precise, hard lines from your 3D viewport. This ensures the walls, window frames, and rooflines remain exactly as modeled.
+2.  **Depth Anything V2 ControlNet (`strength: 0.60`):** Understands the spatial relationships (foreground vs background, overhangs). This helps Flux understand where shadows should drop and how light bounces between surfaces.
 
-### 3. Geometry Control
-*   **Canny Edge ControlNet:** `flux-canny-controlnet.safetensors`. For architecture, preserving straight, rigid lines from the original 3D model is paramount. Depth maps can sometimes blur sharp corners, so a Canny Edge preprocessor (`low_threshold: 100`, `high_threshold: 200`) is used to extract precise edges from your low-res 3D input. This ensures the output structural design is identical to your CAD/3D model.
+### 4. 3-Stage Generation & Upscaling
+To squeeze massive detail out of 16GB VRAM, the generation happens in three stages:
+1.  **Img2Img Base Pass:** Uses the dual ControlNets and triple IP-Adapters to imagine the building at a base resolution.
+2.  **Latent Refinement:** Upscales the latent image by 1.5x and runs a low-denoise (`0.35`) pass to bake in micro-details (like brick mortar or glass imperfections) before pixel decoding.
+3.  **Ultimate SD Upscale:** Uses `4x-UltraSharp` upscaler in `1024x1024` tiles, upscaling by a further 2.0x. Tiling ensures we never hit an Out-Of-Memory (OOM) error while producing 8k level imagery.
 
-### 4. Generation & Upscaling
-*   **Image-to-Image Base Pass (KSampler):** The low-res 3D input is encoded and run through a KSampler with a denoise of `0.65`. This is high enough to let Flux invent beautiful materials and lighting, but low enough (when paired with Canny ControlNet) to maintain structural integrity.
-*   **Ultimate SD Upscale:** We upscale the initial output by `2.0x` using the `4x-UltraSharp.pth` upscaler model. Ultimate SD Upscale processes the image in `1024x1024` tiles, preventing VRAM spikes on the 16GB GPU. `4x-UltraSharp` is chosen because it excels at retaining crisp, un-blurred edges (unlike some anime or organic-focused upscalers), which is perfect for architecture.
-*   **Color Matching Post-Processing:** An `ImageColorMatch` node applies the exact color grading of your mood reference back onto the final upscaled image.
+### 5. Final Color Grade
+An `ImageColorMatch` node takes the color palette of your Mood Reference Image and mathematically applies it to the final high-res output, ensuring the mood is perfectly captured.
 
-## Required Models to Download
-To run this workflow, ensure you have the following in your ComfyUI `models` folders:
-
-*   **UNET:** `flux1-dev-fp8.safetensors`
-*   **CLIP:** `t5xxl_fp8_e4m3fn.safetensors`, `clip_l.safetensors`
-*   **VAE:** `ae.safetensors`
-*   **LoRA:** `flux_archviz.safetensors` (or your preferred architecture LoRA)
-*   **ControlNet:** `flux-canny-controlnet.safetensors`
-*   **IP-Adapter:** `ip-adapter-flux-dev.safetensors`
-*   **CLIP Vision:** `siglip_vision_patch14_384.safetensors`
-*   **Upscaler:** `4x-UltraSharp.pth`
-
-## Usage Instructions
-1.  Open ComfyUI and drag-and-drop `Advanced_Flux_Arch_Workflow.json` into the workspace.
-2.  On the **"Input: Base 3D Viewport"** node, upload your low-res, untextured (or basic textured) 3D viewport render.
-3.  On the **"Input: Material/Mood Reference"** node, upload a high-quality photograph or render that has the materials, colors, and lighting you want to achieve.
-4.  Optionally tweak the Positive/Negative prompts to match your specific building style (e.g., "modern concrete villa, sunset" vs "brick townhouse, overcast").
-5.  Click **Queue Prompt** and wait for the high-resolution masterpiece.
+## Usage
+1. Load `Advanced_Flux_Arch_Workflow.json` into ComfyUI.
+2. Provide your base 3D image.
+3. Provide three specific reference images (Main Material, Mood/Lighting, Secondary Material).
+4. Queue Prompt.

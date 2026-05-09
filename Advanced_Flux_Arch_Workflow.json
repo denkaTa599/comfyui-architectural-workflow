@@ -6,7 +6,7 @@
         },
         "class_type": "UNETLoader",
         "_meta": {
-            "title": "Flux.dev UNET (FP8 - 16GB VRAM)"
+            "title": "Flux.dev UNET (FP8)"
         }
     },
     "2": {
@@ -17,7 +17,7 @@
         },
         "class_type": "DualCLIPLoader",
         "_meta": {
-            "title": "Flux Dual CLIP (T5 FP8)"
+            "title": "Flux Dual CLIP"
         }
     },
     "3": {
@@ -31,9 +31,9 @@
     },
     "4": {
         "inputs": {
-            "lora_name": "flux_archviz.safetensors",
-            "strength_model": 0.85,
-            "strength_clip": 1.0,
+            "lora_name": "flux_archviz_core.safetensors",
+            "strength_model": 0.65,
+            "strength_clip": 0.8,
             "model": [
                 "1",
                 0
@@ -45,27 +45,65 @@
         },
         "class_type": "LoraLoader",
         "_meta": {
-            "title": "Architecture Realism LoRA"
+            "title": "LoRA 1: ArchViz Base"
         }
     },
     "5": {
         "inputs": {
-            "text": "A high-end photorealistic architectural render, modern design, exquisite materials, concrete, wood, glass. Sunset lighting, golden hour, deep shadows, global illumination, ray tracing, sharp focus, 8k, architectural photography.",
+            "lora_name": "flux_cinematic_lighting.safetensors",
+            "strength_model": 0.45,
+            "strength_clip": 0.5,
+            "model": [
+                "4",
+                0
+            ],
             "clip": [
                 "4",
                 1
             ]
         },
-        "class_type": "CLIPTextEncode",
+        "class_type": "LoraLoader",
         "_meta": {
-            "title": "Positive Arch Prompt"
+            "title": "LoRA 2: Cinematic Lighting"
         }
     },
     "6": {
         "inputs": {
-            "text": "low quality, blurry, painting, illustration, watermark, text, out of focus, deformed lines, overexposed.",
+            "lora_name": "flux_hyper_materials.safetensors",
+            "strength_model": 0.5,
+            "strength_clip": 0.5,
+            "model": [
+                "5",
+                0
+            ],
             "clip": [
-                "4",
+                "5",
+                1
+            ]
+        },
+        "class_type": "LoraLoader",
+        "_meta": {
+            "title": "LoRA 3: Hyper Materials"
+        }
+    },
+    "7": {
+        "inputs": {
+            "text": "Award-winning architectural photography, hyper-realistic, highly detailed modern building exterior, exquisite materials: raw concrete, reflective glass, natural timber. Cinematic sunset lighting, volumetric rays, global illumination, sharp focus, 8k, V-Ray render style, masterpiece.",
+            "clip": [
+                "6",
+                1
+            ]
+        },
+        "class_type": "CLIPTextEncode",
+        "_meta": {
+            "title": "Positive Prompt"
+        }
+    },
+    "8": {
+        "inputs": {
+            "text": "low quality, blurry, painting, illustration, watermark, text, out of focus, deformed lines, overexposed, low res, plastic texture.",
+            "clip": [
+                "6",
                 1
             ]
         },
@@ -74,49 +112,65 @@
             "title": "Negative Prompt"
         }
     },
-    "7": {
+    "9": {
         "inputs": {
             "guidance": 3.5,
             "conditioning": [
-                "5",
+                "7",
                 0
             ]
         },
         "class_type": "FluxGuidance",
         "_meta": {
-            "title": "Flux Guidance (CFG: 3.5)"
-        }
-    },
-    "8": {
-        "inputs": {
-            "image": "base_3d_viewport.png",
-            "upload": "image"
-        },
-        "class_type": "LoadImage",
-        "_meta": {
-            "title": "Input: Base 3D Viewport (Low Res)"
-        }
-    },
-    "9": {
-        "inputs": {
-            "image": "reference_mood.png",
-            "upload": "image"
-        },
-        "class_type": "LoadImage",
-        "_meta": {
-            "title": "Input: Material/Mood Reference"
+            "title": "Flux Guidance"
         }
     },
     "10": {
+        "inputs": {
+            "image": "base_3d_viewport.png"
+        },
+        "class_type": "LoadImage",
+        "_meta": {
+            "title": "Input: Base 3D Viewport"
+        }
+    },
+    "11": {
+        "inputs": {
+            "image": "ref_concrete.png"
+        },
+        "class_type": "LoadImage",
+        "_meta": {
+            "title": "Reference 1: Concrete Texture"
+        }
+    },
+    "12": {
+        "inputs": {
+            "image": "ref_lighting_mood.png"
+        },
+        "class_type": "LoadImage",
+        "_meta": {
+            "title": "Reference 2: Lighting/Mood"
+        }
+    },
+    "13": {
+        "inputs": {
+            "image": "ref_glass_facade.png"
+        },
+        "class_type": "LoadImage",
+        "_meta": {
+            "title": "Reference 3: Glass Style"
+        }
+    },
+    "14": {
         "inputs": {
             "ipadapter_file": "ip-adapter-flux-dev.safetensors"
         },
         "class_type": "IPAdapterModelLoader",
         "_meta": {
-            "title": "Flux IP-Adapter"
+            "title": "IP-Adapter Model"
         }
     },
-    "11": {
+    "15": {
         "inputs": {
             "clip_name": "siglip_vision_patch14_384.safetensors"
         },
@@ -125,91 +179,201 @@
             "title": "SigLIP Vision Encoder"
         }
     },
-    "12": {
+    "16": {
         "inputs": {
-            "weight": 0.6,
+            "weight": 0.4,
             "weight_type": "linear",
             "combine_embeds": "concat",
             "start_at": 0.0,
-            "end_at": 0.75,
+            "end_at": 0.6,
             "embeds_scaling": "V only",
             "model": [
-                "4",
+                "6",
                 0
             ],
             "ipadapter": [
-                "10",
+                "14",
                 0
             ],
             "image": [
-                "9",
+                "11",
                 0
             ],
             "clip_vision": [
-                "11",
+                "15",
                 0
             ]
         },
         "class_type": "IPAdapterAdvanced",
         "_meta": {
-            "title": "Apply Style (IP-Adapter)"
+            "title": "IP-Adapter 1: Concrete Material"
         }
     },
-    "13": {
+    "17": {
         "inputs": {
-            "low_threshold": 100,
-            "high_threshold": 200,
-            "resolution": 1024,
+            "weight": 0.55,
+            "weight_type": "linear",
+            "combine_embeds": "concat",
+            "start_at": 0.1,
+            "end_at": 0.85,
+            "embeds_scaling": "V only",
+            "model": [
+                "16",
+                0
+            ],
+            "ipadapter": [
+                "14",
+                0
+            ],
             "image": [
-                "8",
+                "12",
+                0
+            ],
+            "clip_vision": [
+                "15",
                 0
             ]
         },
-        "class_type": "CannyEdgePreprocessor",
+        "class_type": "IPAdapterAdvanced",
         "_meta": {
-            "title": "Extract Canny Edges"
+            "title": "IP-Adapter 2: Lighting/Mood"
         }
     },
-    "14": {
+    "18": {
         "inputs": {
-            "control_net_name": "flux-canny-controlnet.safetensors"
-        },
-        "class_type": "ControlNetLoader",
-        "_meta": {
-            "title": "Flux Canny ControlNet"
-        }
-    },
-    "15": {
-        "inputs": {
-            "strength": 0.85,
-            "start_percent": 0.0,
-            "end_percent": 0.8,
-            "positive": [
-                "7",
+            "weight": 0.35,
+            "weight_type": "linear",
+            "combine_embeds": "concat",
+            "start_at": 0.3,
+            "end_at": 0.9,
+            "embeds_scaling": "V only",
+            "model": [
+                "17",
                 0
             ],
-            "negative": [
-                "6",
-                0
-            ],
-            "control_net": [
+            "ipadapter": [
                 "14",
                 0
             ],
             "image": [
                 "13",
                 0
+            ],
+            "clip_vision": [
+                "15",
+                0
+            ]
+        },
+        "class_type": "IPAdapterAdvanced",
+        "_meta": {
+            "title": "IP-Adapter 3: Glass Facade"
+        }
+    },
+    "19": {
+        "inputs": {
+            "low_threshold": 100,
+            "high_threshold": 200,
+            "resolution": 1024,
+            "image": [
+                "10",
+                0
+            ]
+        },
+        "class_type": "CannyEdgePreprocessor",
+        "_meta": {
+            "title": "Canny Preprocessor"
+        }
+    },
+    "20": {
+        "inputs": {
+            "control_net_name": "flux-canny-controlnet.safetensors"
+        },
+        "class_type": "ControlNetLoader",
+        "_meta": {
+            "title": "Canny ControlNet Model"
+        }
+    },
+    "21": {
+        "inputs": {
+            "strength": 0.75,
+            "start_percent": 0.0,
+            "end_percent": 0.8,
+            "positive": [
+                "9",
+                0
+            ],
+            "negative": [
+                "8",
+                0
+            ],
+            "control_net": [
+                "20",
+                0
+            ],
+            "image": [
+                "19",
+                0
             ]
         },
         "class_type": "ControlNetApplyAdvanced",
         "_meta": {
-            "title": "Apply Canny (Preserve 3D Lines)"
+            "title": "Apply ControlNet: Canny (Lines)"
         }
     },
-    "16": {
+    "22": {
+        "inputs": {
+            "ckpt_name": "depth_anything_v2_vitl.pth",
+            "resolution": 1024,
+            "image": [
+                "10",
+                0
+            ]
+        },
+        "class_type": "DepthAnythingV2Preprocessor",
+        "_meta": {
+            "title": "Depth Preprocessor"
+        }
+    },
+    "23": {
+        "inputs": {
+            "control_net_name": "flux-depth-controlnet-v3.safetensors"
+        },
+        "class_type": "ControlNetLoader",
+        "_meta": {
+            "title": "Depth ControlNet Model"
+        }
+    },
+    "24": {
+        "inputs": {
+            "strength": 0.6,
+            "start_percent": 0.0,
+            "end_percent": 0.65,
+            "positive": [
+                "21",
+                0
+            ],
+            "negative": [
+                "21",
+                1
+            ],
+            "control_net": [
+                "23",
+                0
+            ],
+            "image": [
+                "22",
+                0
+            ]
+        },
+        "class_type": "ControlNetApplyAdvanced",
+        "_meta": {
+            "title": "Apply ControlNet: Depth (Volumes)"
+        }
+    },
+    "25": {
         "inputs": {
             "pixels": [
-                "8",
+                "10",
                 0
             ],
             "vae": [
@@ -219,44 +383,44 @@
         },
         "class_type": "VAEEncode",
         "_meta": {
-            "title": "Encode 3D to Latent"
+            "title": "Encode Base 3D to Latent"
         }
     },
-    "17": {
+    "26": {
         "inputs": {
-            "seed": 847291,
+            "seed": 9482736,
             "control_after_generate": "randomize",
-            "steps": 25,
+            "steps": 28,
             "cfg": 1.0,
             "sampler_name": "euler",
             "scheduler": "simple",
-            "denoise": 0.65,
+            "denoise": 0.7,
             "model": [
-                "12",
+                "18",
                 0
             ],
             "positive": [
-                "15",
+                "24",
                 0
             ],
             "negative": [
-                "15",
+                "24",
                 1
             ],
             "latent_image": [
-                "16",
+                "25",
                 0
             ]
         },
         "class_type": "KSampler",
         "_meta": {
-            "title": "Flux Architecture Img2Img"
+            "title": "Primary Generation (Img2Img)"
         }
     },
-    "18": {
+    "27": {
         "inputs": {
             "samples": [
-                "17",
+                "26",
                 0
             ],
             "vae": [
@@ -269,16 +433,79 @@
             "title": "Decode Base Pass"
         }
     },
-    "19": {
+    "28": {
+        "inputs": {
+            "upscale_method": "bilinear",
+            "crop": "disabled",
+            "samples": [
+                "26",
+                0
+            ],
+            "width": 1536,
+            "height": 1536
+        },
+        "class_type": "LatentUpscale",
+        "_meta": {
+            "title": "Latent Upscale (1.5x)"
+        }
+    },
+    "29": {
+        "inputs": {
+            "seed": 1029384,
+            "control_after_generate": "randomize",
+            "steps": 15,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 0.35,
+            "model": [
+                "18",
+                0
+            ],
+            "positive": [
+                "24",
+                0
+            ],
+            "negative": [
+                "24",
+                1
+            ],
+            "latent_image": [
+                "28",
+                0
+            ]
+        },
+        "class_type": "KSampler",
+        "_meta": {
+            "title": "Detail Refinement Pass"
+        }
+    },
+    "30": {
+        "inputs": {
+            "samples": [
+                "29",
+                0
+            ],
+            "vae": [
+                "3",
+                0
+            ]
+        },
+        "class_type": "VAEDecode",
+        "_meta": {
+            "title": "Decode Refined Pass"
+        }
+    },
+    "31": {
         "inputs": {
             "model_name": "4x-UltraSharp.pth"
         },
         "class_type": "UpscaleModelLoader",
         "_meta": {
-            "title": "4x-UltraSharp (Architecture focus)"
+            "title": "Load 4x-UltraSharp"
         }
     },
-    "20": {
+    "32": {
         "inputs": {
             "upscale_by": 2.0,
             "seed": 5839201,
@@ -287,7 +514,7 @@
             "cfg": 1.0,
             "sampler_name": "euler",
             "scheduler": "simple",
-            "denoise": 0.25,
+            "denoise": 0.2,
             "mode_type": "Linear",
             "tile_width": 1024,
             "tile_height": 1024,
@@ -299,19 +526,19 @@
             "seam_fix_padding": 16,
             "force_uniform_tiles": true,
             "image": [
-                "18",
+                "30",
                 0
             ],
             "model": [
-                "12",
+                "18",
                 0
             ],
             "positive": [
-                "15",
+                "24",
                 0
             ],
             "negative": [
-                "15",
+                "24",
                 1
             ],
             "vae": [
@@ -319,23 +546,23 @@
                 0
             ],
             "upscale_model": [
-                "19",
+                "31",
                 0
             ]
         },
         "class_type": "UltimateSDUpscale",
         "_meta": {
-            "title": "Tiled Upscale (16GB VRAM Safe)"
+            "title": "Final Tiled Upscale"
         }
     },
-    "21": {
+    "33": {
         "inputs": {
             "image_ref": [
-                "9",
+                "12",
                 0
             ],
             "image_target": [
-                "20",
+                "32",
                 0
             ],
             "method": "mkl",
@@ -343,20 +570,20 @@
         },
         "class_type": "ImageColorMatch",
         "_meta": {
-            "title": "Color Match to Mood Board"
+            "title": "Match Color Grade to Mood"
         }
     },
-    "22": {
+    "34": {
         "inputs": {
-            "filename_prefix": "ArchRender_Flux_",
+            "filename_prefix": "ArchViz_Master_",
             "images": [
-                "21",
+                "33",
                 0
             ]
         },
         "class_type": "SaveImage",
         "_meta": {
-            "title": "Save Final Image"
+            "title": "Save Final Masterpiece"
         }
     }
 }
