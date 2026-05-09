@@ -20,10 +20,9 @@ To achieve true photorealism, relying on a single LoRA isn't enough. We use a **
 3.  **Hyper Materials (`strength: 0.50`):** Adds micro-details to surfaces, ensuring concrete looks porous and glass looks appropriately reflective.
 
 ### 2. The Multi-IP-Adapter Pipeline
-Materials are everything in architecture. We use **three chained IP-Adapters**, each with a specific purpose:
+Materials are everything in architecture. We use **two chained IP-Adapters**, each with a specific purpose:
 1.  **Primary Material (Concrete/Wood):** A reference image specifically for the main building texture. Applied early in the generation (`start: 0.0, end: 0.60`).
 2.  **Mood/Lighting Reference:** An image depicting the desired atmosphere. Applied heavily throughout the generation (`start: 0.1, end: 0.85`).
-3.  **Secondary Material (Glass/Metal):** A reference for facade reflections. Applied later to dictate surface finish (`start: 0.3, end: 0.90`).
 
 ### 3. Dual ControlNet Geometry Preservation
 A single ControlNet cannot understand both rigid lines and volumetric space perfectly. We use a **Dual ControlNet setup**:

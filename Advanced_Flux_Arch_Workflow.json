@@ -152,15 +152,6 @@
             "title": "Reference 2: Lighting/Mood"
         }
     },
-    "13": {
-        "inputs": {
-            "image": "ref_glass_facade.png"
-        },
-        "class_type": "LoadImage",
-        "_meta": {
-            "title": "Reference 3: Glass Style"
-        }
-    },
     "14": {
         "inputs": {
             "ipadapter_file": "ip-adapter-flux-dev.safetensors"
@@ -237,36 +228,6 @@
         "class_type": "IPAdapterAdvanced",
         "_meta": {
             "title": "IP-Adapter 2: Lighting/Mood"
-        }
-    },
-    "18": {
-        "inputs": {
-            "weight": 0.35,
-            "weight_type": "linear",
-            "combine_embeds": "concat",
-            "start_at": 0.3,
-            "end_at": 0.9,
-            "embeds_scaling": "V only",
-            "model": [
-                "17",
-                0
-            ],
-            "ipadapter": [
-                "14",
-                0
-            ],
-            "image": [
-                "13",
-                0
-            ],
-            "clip_vision": [
-                "15",
-                0
-            ]
-        },
-        "class_type": "IPAdapterAdvanced",
-        "_meta": {
-            "title": "IP-Adapter 3: Glass Facade"
         }
     },
     "19": {
@@ -396,7 +357,7 @@
             "scheduler": "simple",
             "denoise": 0.7,
             "model": [
-                "18",
+                "17",
                 0
             ],
             "positive": [
@@ -459,7 +420,7 @@
             "scheduler": "simple",
             "denoise": 0.35,
             "model": [
-                "18",
+                "17",
                 0
             ],
             "positive": [
@@ -530,7 +491,7 @@
                 0
             ],
             "model": [
-                "18",
+                "17",
                 0
             ],
             "positive": [
