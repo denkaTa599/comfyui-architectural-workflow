@@ -52,3 +52,6 @@ If ComfyUI tells you that a node is missing (e.g., `ImageColorMatch`), the easie
 3. Click **Install Missing Custom Nodes**.
 4. It will search its database for the node (e.g., `ImageColorMatch` is part of the `ComfyUI_essentials` or `ComfyUI-Image-Filters` package) and install it for you.
 5. Restart ComfyUI.
+
+### Specific Node Packages
+*   **ImageColorMatch:** This node is part of the **[ComfyUI Essentials](https://github.com/cubiq/ComfyUI_essentials)** custom node package created by `cubiq`.
