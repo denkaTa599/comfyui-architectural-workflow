@@ -1,0 +1,362 @@
+{
+    "1": {
+        "inputs": {
+            "unet_name": "flux1-dev-fp8.safetensors",
+            "weight_dtype": "fp8_e4m3fn"
+        },
+        "class_type": "UNETLoader",
+        "_meta": {
+            "title": "Flux.dev UNET (FP8 - 16GB VRAM)"
+        }
+    },
+    "2": {
+        "inputs": {
+            "clip_name1": "t5xxl_fp8_e4m3fn.safetensors",
+            "clip_name2": "clip_l.safetensors",
+            "type": "flux"
+        },
+        "class_type": "DualCLIPLoader",
+        "_meta": {
+            "title": "Flux Dual CLIP (T5 FP8)"
+        }
+    },
+    "3": {
+        "inputs": {
+            "vae_name": "ae.safetensors"
+        },
+        "class_type": "VAELoader",
+        "_meta": {
+            "title": "Flux VAE"
+        }
+    },
+    "4": {
+        "inputs": {
+            "lora_name": "flux_archviz.safetensors",
+            "strength_model": 0.85,
+            "strength_clip": 1.0,
+            "model": [
+                "1",
+                0
+            ],
+            "clip": [
+                "2",
+                0
+            ]
+        },
+        "class_type": "LoraLoader",
+        "_meta": {
+            "title": "Architecture Realism LoRA"
+        }
+    },
+    "5": {
+        "inputs": {
+            "text": "A high-end photorealistic architectural render, modern design, exquisite materials, concrete, wood, glass. Sunset lighting, golden hour, deep shadows, global illumination, ray tracing, sharp focus, 8k, architectural photography.",
+            "clip": [
+                "4",
+                1
+            ]
+        },
+        "class_type": "CLIPTextEncode",
+        "_meta": {
+            "title": "Positive Arch Prompt"
+        }
+    },
+    "6": {
+        "inputs": {
+            "text": "low quality, blurry, painting, illustration, watermark, text, out of focus, deformed lines, overexposed.",
+            "clip": [
+                "4",
+                1
+            ]
+        },
+        "class_type": "CLIPTextEncode",
+        "_meta": {
+            "title": "Negative Prompt"
+        }
+    },
+    "7": {
+        "inputs": {
+            "guidance": 3.5,
+            "conditioning": [
+                "5",
+                0
+            ]
+        },
+        "class_type": "FluxGuidance",
+        "_meta": {
+            "title": "Flux Guidance (CFG: 3.5)"
+        }
+    },
+    "8": {
+        "inputs": {
+            "image": "base_3d_viewport.png",
+            "upload": "image"
+        },
+        "class_type": "LoadImage",
+        "_meta": {
+            "title": "Input: Base 3D Viewport (Low Res)"
+        }
+    },
+    "9": {
+        "inputs": {
+            "image": "reference_mood.png",
+            "upload": "image"
+        },
+        "class_type": "LoadImage",
+        "_meta": {
+            "title": "Input: Material/Mood Reference"
+        }
+    },
+    "10": {
+        "inputs": {
+            "ipadapter_file": "ip-adapter-flux-dev.safetensors"
+        },
+        "class_type": "IPAdapterModelLoader",
+        "_meta": {
+            "title": "Flux IP-Adapter"
+        }
+    },
+    "11": {
+        "inputs": {
+            "clip_name": "siglip_vision_patch14_384.safetensors"
+        },
+        "class_type": "CLIPVisionLoader",
+        "_meta": {
+            "title": "SigLIP Vision Encoder"
+        }
+    },
+    "12": {
+        "inputs": {
+            "weight": 0.6,
+            "weight_type": "linear",
+            "combine_embeds": "concat",
+            "start_at": 0.0,
+            "end_at": 0.75,
+            "embeds_scaling": "V only",
+            "model": [
+                "4",
+                0
+            ],
+            "ipadapter": [
+                "10",
+                0
+            ],
+            "image": [
+                "9",
+                0
+            ],
+            "clip_vision": [
+                "11",
+                0
+            ]
+        },
+        "class_type": "IPAdapterAdvanced",
+        "_meta": {
+            "title": "Apply Style (IP-Adapter)"
+        }
+    },
+    "13": {
+        "inputs": {
+            "low_threshold": 100,
+            "high_threshold": 200,
+            "resolution": 1024,
+            "image": [
+                "8",
+                0
+            ]
+        },
+        "class_type": "CannyEdgePreprocessor",
+        "_meta": {
+            "title": "Extract Canny Edges"
+        }
+    },
+    "14": {
+        "inputs": {
+            "control_net_name": "flux-canny-controlnet.safetensors"
+        },
+        "class_type": "ControlNetLoader",
+        "_meta": {
+            "title": "Flux Canny ControlNet"
+        }
+    },
+    "15": {
+        "inputs": {
+            "strength": 0.85,
+            "start_percent": 0.0,
+            "end_percent": 0.8,
+            "positive": [
+                "7",
+                0
+            ],
+            "negative": [
+                "6",
+                0
+            ],
+            "control_net": [
+                "14",
+                0
+            ],
+            "image": [
+                "13",
+                0
+            ]
+        },
+        "class_type": "ControlNetApplyAdvanced",
+        "_meta": {
+            "title": "Apply Canny (Preserve 3D Lines)"
+        }
+    },
+    "16": {
+        "inputs": {
+            "pixels": [
+                "8",
+                0
+            ],
+            "vae": [
+                "3",
+                0
+            ]
+        },
+        "class_type": "VAEEncode",
+        "_meta": {
+            "title": "Encode 3D to Latent"
+        }
+    },
+    "17": {
+        "inputs": {
+            "seed": 847291,
+            "control_after_generate": "randomize",
+            "steps": 25,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 0.65,
+            "model": [
+                "12",
+                0
+            ],
+            "positive": [
+                "15",
+                0
+            ],
+            "negative": [
+                "15",
+                1
+            ],
+            "latent_image": [
+                "16",
+                0
+            ]
+        },
+        "class_type": "KSampler",
+        "_meta": {
+            "title": "Flux Architecture Img2Img"
+        }
+    },
+    "18": {
+        "inputs": {
+            "samples": [
+                "17",
+                0
+            ],
+            "vae": [
+                "3",
+                0
+            ]
+        },
+        "class_type": "VAEDecode",
+        "_meta": {
+            "title": "Decode Base Pass"
+        }
+    },
+    "19": {
+        "inputs": {
+            "model_name": "4x-UltraSharp.pth"
+        },
+        "class_type": "UpscaleModelLoader",
+        "_meta": {
+            "title": "4x-UltraSharp (Architecture focus)"
+        }
+    },
+    "20": {
+        "inputs": {
+            "upscale_by": 2.0,
+            "seed": 5839201,
+            "control_after_generate": "randomize",
+            "steps": 20,
+            "cfg": 1.0,
+            "sampler_name": "euler",
+            "scheduler": "simple",
+            "denoise": 0.25,
+            "mode_type": "Linear",
+            "tile_width": 1024,
+            "tile_height": 1024,
+            "tile_padding": 32,
+            "seam_fix_mode": "Band Pass",
+            "seam_fix_denoise": 1.0,
+            "seam_fix_width": 64,
+            "seam_fix_mask_blur": 8,
+            "seam_fix_padding": 16,
+            "force_uniform_tiles": true,
+            "image": [
+                "18",
+                0
+            ],
+            "model": [
+                "12",
+                0
+            ],
+            "positive": [
+                "15",
+                0
+            ],
+            "negative": [
+                "15",
+                1
+            ],
+            "vae": [
+                "3",
+                0
+            ],
+            "upscale_model": [
+                "19",
+                0
+            ]
+        },
+        "class_type": "UltimateSDUpscale",
+        "_meta": {
+            "title": "Tiled Upscale (16GB VRAM Safe)"
+        }
+    },
+    "21": {
+        "inputs": {
+            "image_ref": [
+                "9",
+                0
+            ],
+            "image_target": [
+                "20",
+                0
+            ],
+            "method": "mkl",
+            "color_space": "rgb"
+        },
+        "class_type": "ImageColorMatch",
+        "_meta": {
+            "title": "Color Match to Mood Board"
+        }
+    },
+    "22": {
+        "inputs": {
+            "filename_prefix": "ArchRender_Flux_",
+            "images": [
+                "21",
+                0
+            ]
+        },
+        "class_type": "SaveImage",
+        "_meta": {
+            "title": "Save Final Image"
+        }
+    }
+}
