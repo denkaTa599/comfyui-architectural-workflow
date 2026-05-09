@@ -108,3 +108,18 @@ This crash occurs because you are using a very recent version of ComfyUI (v0.13.
 To fix this:
 1. I have reverted the workflow back to using **[ComfyUI_IPAdapter_plus](https://github.com/cubiq/ComfyUI_IPAdapter_plus)** (the nodes named `IPAdapterAdvanced` and `IPAdapterModelLoader`). Its developer, Cubiq, has updated it to be compatible with the newest ComfyUI Flux changes.
 2. Ensure your `ComfyUI_IPAdapter_plus` package is fully up to date via the ComfyUI Manager to avoid the "FaceID" error.
+
+### Resolving the InsightFace/FaceID Error for Flux IP-Adapter
+
+Due to a bug in `ComfyUI_IPAdapter_plus`, the current version incorrectly identifies the Flux IP-Adapter model as a "FaceID" model. This causes the workflow to crash asking for an `insightface` model, even when not doing facial synthesis.
+
+**The Fix Implemented:**
+I've wired a **Dummy InsightFace Loader** (`IPAdapterInsightFaceLoader`) into the `IPAdapterAdvanced` nodes. This satisfies the node's internal check and allows the Flux IP-Adapter to function normally for materials and mood.
+
+**Requirements:**
+Because of this workaround, you MUST have the insightface models installed in your ComfyUI directory, even though they won't be used for faces:
+1. Download `buffalo_l` insightface model pack (extract the `.onnx` files).
+2. Place them in: `ComfyUI/models/insightface/models/buffalo_l/`
+   *(If the `insightface` or `models` folder doesn't exist inside `ComfyUI/models/`, create them).*
+
+This will allow the IP-Adapter nodes to bypass the FaceID exception and process your architectural images!

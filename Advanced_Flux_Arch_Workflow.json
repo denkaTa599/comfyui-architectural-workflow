@@ -184,6 +184,10 @@
             "clip_vision": [
                 "99",
                 0
+            ],
+            "insightface": [
+                "999",
+                0
             ]
         },
         "class_type": "IPAdapterAdvanced",
@@ -213,6 +217,10 @@
             "embeds_scaling": "V only",
             "clip_vision": [
                 "99",
+                0
+            ],
+            "insightface": [
+                "999",
                 0
             ]
         },
@@ -553,6 +561,34 @@
         "class_type": "CLIPVisionLoader",
         "_meta": {
             "title": "Load CLIP Vision (SigLIP)"
+        }
+    },
+    "113": {
+        "inputs": {
+            "ipadapter_file": "ip-adapter-flux-dev.safetensors"
+        },
+        "class_type": "IPAdapterModelLoader",
+        "_meta": {
+            "title": "IPAdapter Loader (Mood)"
+        }
+    },
+    "118": {
+        "inputs": {
+            "ipadapter_file": "ip-adapter-flux-dev.safetensors"
+        },
+        "class_type": "IPAdapterModelLoader",
+        "_meta": {
+            "title": "IPAdapter Loader (Material)"
+        }
+    },
+    "999": {
+        "class_type": "IPAdapterInsightFaceLoader",
+        "inputs": {
+            "provider": "CPU",
+            "model_name": "buffalo_l"
+        },
+        "_meta": {
+            "title": "Dummy InsightFace (Bypass Error)"
         }
     }
 }
