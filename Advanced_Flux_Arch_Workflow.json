@@ -31,7 +31,7 @@
     },
     "4": {
         "inputs": {
-            "lora_name": "flux_archviz_core.safetensors",
+            "lora_name": "flux\\flux-arch-realism-v2.safetensors",
             "strength_model": 0.65,
             "strength_clip": 0.8,
             "model": [
@@ -50,7 +50,7 @@
     },
     "5": {
         "inputs": {
-            "lora_name": "flux_cinematic_lighting.safetensors",
+            "lora_name": "flux\\exterior-space-crafter.safetensors",
             "strength_model": 0.45,
             "strength_clip": 0.5,
             "model": [
@@ -69,7 +69,7 @@
     },
     "6": {
         "inputs": {
-            "lora_name": "flux_hyper_materials.safetensors",
+            "lora_name": "flux\\design-input-archviz.safetensors",
             "strength_model": 0.5,
             "strength_clip": 0.5,
             "model": [
@@ -286,7 +286,7 @@
     },
     "20": {
         "inputs": {
-            "control_net_name": "flux-canny-controlnet.safetensors"
+            "control_net_name": "flux_union_pro2_shakker.safetensors"
         },
         "class_type": "ControlNetLoader",
         "_meta": {
@@ -336,7 +336,7 @@
     },
     "23": {
         "inputs": {
-            "control_net_name": "flux-depth-controlnet-v3.safetensors"
+            "control_net_name": "flux_union_pro2_shakker.safetensors"
         },
         "class_type": "ControlNetLoader",
         "_meta": {
@@ -498,7 +498,7 @@
     },
     "31": {
         "inputs": {
-            "model_name": "4x-UltraSharp.pth"
+            "model_name": "4xUltrasharp_4xUltrasharpV10.pt"
         },
         "class_type": "UpscaleModelLoader",
         "_meta": {

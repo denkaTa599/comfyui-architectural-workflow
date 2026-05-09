@@ -79,3 +79,17 @@ For beginners to ComfyUI, here is a breakdown of what every node in this workflo
 18. **UltimateSDUpscale:** Chops your image into small 1024x1024 tiles, upscales each tile individually with `4x-UltraSharp`, and seamlessly stitches them back together. This is how you get 8k images on a 16GB GPU without crashing.
 19. **ImageColorMatch+:** Compares your final render to your Mood Reference image and adjusts the colors/contrast of the render to perfectly match the reference.
 20. **SaveImage:** Saves the final high-resolution masterpiece to your computer's hard drive.
+
+### Solving "Prompt execution failed" / Validation Errors
+If you see a red box saying "Prompt execution failed" and "Value not in list", it simply means ComfyUI cannot find the exact file name I used in my template on *your* specific computer.
+
+To fix this:
+1.  **For `LoadImage` errors:** The workflow has placeholder image names (like `ref_concrete.png`). Click the "choose file to upload" button on those nodes and select real images from your hard drive.
+2.  **For `LoraLoader`, `ControlNetLoader`, `UpscaleModelLoader`, etc:** The file names must perfectly match what is in your `models/` folders. Click on the text box where the model name is, and select the correct file from the dropdown menu that appears.
+    *   *I have updated the default template to use the files you actually have installed (like `flux\flux-arch-realism-v2.safetensors` and `4xUltrasharp_4xUltrasharpV10.pt`), but you will still need to manually download `ip-adapter-flux-dev.safetensors` and `siglip_vision_patch14_384.safetensors` if you haven't already.*
+
+### Can I bypass the IP-Adapters?
+Yes! The IP-Adapters are highly recommended for dictating specific materials and lighting, but they are not strictly required. If you want Flux to rely entirely on your text prompt (e.g., if you don't have good reference images):
+1. In ComfyUI, right-click on the **IPAdapterAdvanced** nodes.
+2. Select **Bypass**. The nodes will turn gray/purple and a red line will strike through them.
+3. ComfyUI will now ignore them during generation. You do not need to delete the nodes or change the wiring.
